@@ -1,10 +1,7 @@
 const { get } = require('lodash');
 
 const {
-  BadRequestHttpException,
-  ConflictHttpException,
-  NotFoundHttpException,
-  UnauthorizedHttpException,
+  errorCodes,
 } = require('errors-list/http-errors');
 
 const errorHandler = (err, req, res, next) => {
@@ -14,17 +11,15 @@ const errorHandler = (err, req, res, next) => {
       error: err.error.toString(),
     });
   }
-  if (
-    err instanceof BadRequestHttpException
-    || err instanceof ConflictHttpException
-    || err instanceof NotFoundHttpException
-    || err instanceof UnauthorizedHttpException
-  ) {
+
+  const errorCodesSet = new Set(Object.values(errorCodes));
+
+  if (errorCodesSet.has(err.code)) {
     return res.status(err.status).json(err.toJSON());
   }
 
   console.error(err);
-  return res.status(500).json({ error: err.message });
+  return res.status(500).send('Internal Server Error');
 };
 
 module.exports = {
