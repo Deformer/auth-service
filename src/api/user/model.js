@@ -2,6 +2,7 @@ const Sequelize = require('sequelize');
 
 const { sequelize } = require('../../services/postgres');
 const { compare } = require('../../services/password-hash');
+const { NotFoundHttpException, BadRequestHttpException } = require('../../common/errors');
 
 const User = sequelize.define('user', {
   id: {
@@ -29,15 +30,13 @@ User.prototype.toClient = function () {
 
 User.login = ({ login, password }) => User.findOne({ where: { login } }).then((user) => {
   if (!user) {
-    // TODO 404
-    throw new Error('404');
+    throw new BadRequestHttpException('Wrong login or password');
   }
   const isPasswordCorrect = compare(password, user.passwordHash, user.passwordSalt);
   if (isPasswordCorrect) {
     return user;
   }
-  // TODO 400
-  throw new Error('400 Wrong credentials');
+  throw new BadRequestHttpException('Wrong login or password');
 });
 
 module.exports = User;
