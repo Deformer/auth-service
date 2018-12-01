@@ -5,7 +5,7 @@ const {
   ConflictHttpException,
   NotFoundHttpException,
   UnauthorizedHttpException,
-} = require('../../common/errors');
+} = require('errors-list/http-errors');
 
 const errorHandler = (err, req, res, next) => {
   const isJoi = get(err, 'error.isJoi', false);
