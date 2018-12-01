@@ -1,4 +1,5 @@
 const express = require('express');
+const { get } = require('lodash');
 const bodyParser = require('body-parser');
 const session = require('express-session');
 const RedisStore = require('connect-redis')(session);
@@ -18,6 +19,17 @@ module.exports = (apiRoot, routes) => {
     saveUninitialized: true,
   }));
   app.use(apiRoot, routes);
+  app.use((err, req, res, next) => {
+    const isJoi = get(err, 'error.isJoi', false);
+    if (isJoi) {
+      res.status(400).json({
+        error: err.error.toString(),
+      });
+    } else {
+      // pass on to another error handler
+      next(err);
+    }
+  });
 
   return app;
 };
