@@ -1,0 +1,96 @@
+openapi: "3.0.1"
+
+info:
+  description: 'Auth API for Chats'
+  version: '1.0.0'
+  title: 'Auth Chat API'
+  termsOfService: 'https://iqoption.com/en/terms-and-conditions/terms-conditions'
+
+externalDocs:
+  description: 'Find out more about OpenAPI 3'
+  url: 'http://swagger.io'
+
+servers:
+  - url: https://chat.iqoption-darkest-internals.com
+    description: Production server
+  - url: https://chat.stage.iqoption-darkest-internals.com
+    description: Staging server
+
+tags:
+  - name: "auth"
+    description: "Everything about authorization"
+
+paths:
+  /login:
+    post:
+      summary: 'Log user in'
+      tags: [auth]
+      requestBody: 
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginParameters'
+      responses:
+        200:
+          description: 'Ok: User successfully authenticated'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+          headers: 
+            Cookies: 
+              schema: 
+                type: string
+        400:
+          description: 'Bad request: required parameters missing or invalid'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        401:
+          description: 'Not authorized: unknown login/password pair'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        500:
+          description: 'Internal server error: something went wrong on server side'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+
+components:
+  securitySchemes: 
+    cookieAuth:
+      type: apiKey
+      in: cookie
+      name: sessionId
+      
+  schemas:
+    User:
+      properties:
+        id:
+          type: number
+        name:
+          type: string
+        login:
+          type: string
+
+    LoginParameters:
+      required:
+        - login
+        - password
+      properties:
+        login:
+          type: string
+        password:
+          type: string
+
+    ErrorResponse:
+      required:
+        - error
+      properties:
+        error:
+          type: string
