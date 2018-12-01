@@ -1,4 +1,4 @@
-const User = require('./model');
+const { User } = require('database-module/models');
 
 const create = (req, res, next) => User.create(req.body)
   .then(user => res.status(201).send(user.toClient()))
@@ -8,7 +8,7 @@ const login = (req, res, next) => {
   return User.login(req.body)
     .then((user) => {
       req.session.userId = user.id;
-      res.status(200).send(user.toClient());
+      res.status(200).json(user);
     }).catch(err => next(err));
 };
 
