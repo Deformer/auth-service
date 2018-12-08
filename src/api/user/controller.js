@@ -1,18 +1,27 @@
-const { User } = require('database-module/models');
+const { User, Room } = require('database-module/models');
 
-const create = (req, res, next) => User.create(req.body)
-  .then(user => res.status(201).send(user.toClient()))
+const { sendMessageToRoom } = require('../../services/message-sender');
+
+const login = (req, res, next) => User.login(req.body)
+  .then((user) => {
+    req.session.userId = user.id;
+    res.status(200).json(user);
+    return Promise.all([
+      Room.findOne({ where: { title: 'Auth' } }),
+      user,
+    ]);
+  })
+  .then(([room, user]) => {
+    if (room) {
+      sendMessageToRoom({
+        text: `User ${user.name} logged in`,
+        user,
+        room,
+      });
+    }
+  })
   .catch(err => next(err));
 
-const login = (req, res, next) => {
-  return User.login(req.body)
-    .then((user) => {
-      req.session.userId = user.id;
-      res.status(200).json(user);
-    }).catch(err => next(err));
-};
-
 module.exports = {
-  create,
   login,
 };

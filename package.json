@@ -5,7 +5,7 @@
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server.js"
+    "start": "node src/server.js"
   },
   "author": "",
   "license": "ISC",
@@ -21,6 +21,7 @@
     "joi": "^14.3.0",
     "lodash": "^4.17.11",
     "pg": "^7.7.1",
+    "redis": "^2.8.0",
     "sequelize": "^4.41.2",
     "sequelize-cli": "^5.4.0",
     "winston": "^3.1.0"
