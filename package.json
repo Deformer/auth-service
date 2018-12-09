@@ -20,11 +20,7 @@
     "express-session": "^1.15.6",
     "joi": "^14.3.0",
     "lodash": "^4.17.11",
-    "pg": "^7.7.1",
-    "redis": "^2.8.0",
-    "sequelize": "^4.41.2",
-    "sequelize-cli": "^5.4.0",
-    "winston": "^3.1.0"
+    "redis": "^2.8.0"
   },
   "devDependencies": {
     "eslint": "^5.9.0",

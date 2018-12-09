@@ -1,9 +1,8 @@
 const http = require('http');
-const {
-  env, port, apiRoot,
-} = require('./config');
+
 const express = require('./services/express');
 const api = require('./api');
+const { env, port, apiRoot } = require('./config');
 
 const app = express(apiRoot, api);
 const server = http.createServer(app);
